@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import WelcomeForm from "./WelcomeForm";
-import { playerInfo } from "../SharedTypes";
+import CategoryListing from "./CategoryListing";
 
 const TriviaWrapper = () => {
   const [playerName, setPlayerName] = useState<string>("");
@@ -8,7 +8,7 @@ const TriviaWrapper = () => {
   const [start, setStart] = useState<boolean>(false);
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-gray-300 rounded-md box shadow-md">
       <WelcomeForm
         setPlayerName={setPlayerName}
         setDifficulty={setDifficulty}
@@ -16,6 +16,7 @@ const TriviaWrapper = () => {
         playerName={playerName}
         difficulty={difficulty}
       />
+      <CategoryListing />
     </div>
   );
 };

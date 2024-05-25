@@ -19,7 +19,7 @@ const WelcomeForm = ({
     setDifficulty(level);
   };
   return (
-    <div className="bg-gray-300 rounded-md box shadow-md">
+    <div>
       <div className="flex flex-col gap-3 items-center p-4">
         <input
           onChange={(e) => setPlayerName(e.target.value)}
