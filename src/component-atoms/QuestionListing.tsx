@@ -13,20 +13,14 @@ const QuestionListing = ({
   difficulty,
   setCategory,
 }: QuestionListingProps) => {
-  // console.log(
-  //   category,
-  //   "checkingg the prop from inside the questionListing component!!!"
-  // );
-
+  const amount = 5;
   const [index, setIndex] = useState<number>(1);
-  const [amount, setAmount] = useState<number>(3);
   const [stopWatch, setStopWatch] = useState<number>(0);
-
-  const skippingQuestions = () => {
-    setIndex((prev) => {
-      return prev + 1;
-    });
-  };
+  const [answer, setAnswer] = useState<string>("");
+  const [numberOfCorrectAnsweres, setNumberOfCorrectAnsweres] =
+    useState<number>(0);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const [timeoutId, setTimeOutId] = useState<NodeJS.Timeout | null>(null);
 
   const fetchingQuestions = () => {
     return fetch(
@@ -44,27 +38,56 @@ const QuestionListing = ({
     queryFn: fetchingQuestions,
   });
 
+  const skippingQuestions = (skipType: number) => {
+    if (skipType == 1) {
+      setStopWatch(30);
+    }
+    setIndex((prev) => {
+      return prev + 1;
+    });
+  };
+
   useEffect(() => {
     if (index <= amount) {
       let milliseconds =
         difficulty === "HARD" ? 30000 : difficulty === "MEDIUM" ? 60000 : 90000;
-      setTimeout(skippingQuestions, milliseconds);
-      let myInterval = setInterval(() => {
-        if (stopWatch > 30 || stopWatch == 30) {
-          setStopWatch(1);
-          clearInterval(myInterval);
-        } else {
-          setStopWatch((prev) => {
-            console.log(prev, "checking the numberr");
-            return prev + 1;
-          });
-        }
-      }, 1000);
+
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        setTimeOutId(setTimeout(() => skippingQuestions(0), milliseconds));
+      } else {
+        setTimeOutId(setTimeout(() => skippingQuestions(0), milliseconds));
+      }
+      if (intervalId) {
+        clearInterval(intervalId);
+        setIntervalId(
+          setInterval(() => {
+            setStopWatch((prev) => {
+              if (prev >= 30) {
+                return 1;
+              } else {
+                return prev + 1;
+              }
+            });
+          }, 1000)
+        );
+      } else {
+        setIntervalId(
+          setInterval(() => {
+            setStopWatch((prev) => {
+              if (prev >= 30) {
+                return 1;
+              } else {
+                return prev + 1;
+              }
+            });
+          }, 1000)
+        );
+      }
     } else {
-      console.log(index, "is the index greaterrrrr1rr1");
       setCategory(0);
     }
-  }, [index, difficulty]);
+  }, [index]);
 
   return (
     <div className="flex flex-col gap-3 items-center">
@@ -79,19 +102,33 @@ const QuestionListing = ({
           incorrect_answres={data[index - 1].incorrect_answers}
           question={data[index - 1].question}
           correct_answer={data[index - 1].correct_answer}
+          setAnswer={setAnswer}
         />
       )}
       <div className="flex gap-3">
         <button
-          disabled={index == amount}
           onClick={() => {
+            if (data && data && data[index - 1] && answer) {
+              console.log(answer, data[index - 1]);
+              if (answer === data[index - 1].correct_answer) {
+                setNumberOfCorrectAnsweres((prev) => {
+                  return prev + 1;
+                });
+              }
+            }
+            setStopWatch(30);
             setIndex((prev) => prev + 1);
           }}
           className="p-4 bg-red-600 rounded-md"
         >
           Next
         </button>
-        <button className="p-4 bg-red-600 rounded-md">Skip</button>
+        <button
+          onClick={() => skippingQuestions(1)}
+          className="p-4 bg-red-600 rounded-md"
+        >
+          Skip
+        </button>
       </div>
     </div>
   );

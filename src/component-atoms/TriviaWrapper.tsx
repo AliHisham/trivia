@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import WelcomeForm from "./WelcomeForm";
 import CategoryListing from "./CategoryListing";
 import QuestionListing from "./QuestionListing";
@@ -8,6 +8,16 @@ const TriviaWrapper = () => {
   const [difficulty, setDifficulty] = useState<string>("");
   const [start, setStart] = useState<boolean>(false);
   const [category, setCategory] = useState<number>(0);
+
+  useEffect(() => {
+    const data = localStorage.getItem("triviaInfo");
+    if (data) {
+      let playerData = JSON.parse(data);
+      setStart(true);
+      setPlayerName(playerData.playerName);
+      setDifficulty(playerData.difficulty);
+    }
+  }, []);
 
   return (
     <div className="p-4 bg-gray-300 rounded-md box shadow-md">

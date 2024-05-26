@@ -18,6 +18,17 @@ const WelcomeForm = ({
   const handleSetDifficultyLevel = (level: string) => {
     setDifficulty(level);
   };
+
+  const handleStartOfTheGame = () => {
+    setStart(true);
+    localStorage.setItem(
+      "triviaInfo",
+      JSON.stringify({
+        playerName: playerName,
+        difficulty: difficulty,
+      })
+    );
+  };
   return (
     <div>
       <div className="flex flex-col gap-3 items-center p-4">
@@ -47,7 +58,7 @@ const WelcomeForm = ({
           </button>
         </div>
         <button
-          onClick={() => setStart(true)}
+          onClick={() => handleStartOfTheGame()}
           disabled={difficulty === "" && playerName === ""}
           className="bg-red-600 w-2/6 p-4 rounded-md"
         >

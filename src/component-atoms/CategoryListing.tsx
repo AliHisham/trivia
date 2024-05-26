@@ -14,7 +14,6 @@ const CategoryListing = ({ setCategory }: CategoryProps) => {
         return res.json();
       })
       .then((res) => {
-        console.log("checking the response", res.trivia_categories);
         return res.trivia_categories;
       });
   };
@@ -23,7 +22,7 @@ const CategoryListing = ({ setCategory }: CategoryProps) => {
     queryKey: ["trivia_categories"],
     queryFn: fetchingCategories,
   });
-  console.log(data, "categoriesss!!!");
+
   return (
     <div className="flex flex-col gap-4">
       <h2>SELECT A CATEGORY!</h2>
