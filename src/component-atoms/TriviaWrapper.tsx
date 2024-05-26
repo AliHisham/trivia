@@ -22,7 +22,11 @@ const TriviaWrapper = () => {
       )}
       {start && !category && <CategoryListing setCategory={setCategory} />}
       {category && (
-        <QuestionListing category={category} difficulty={difficulty} />
+        <QuestionListing
+          setCategory={setCategory}
+          category={category}
+          difficulty={difficulty}
+        />
       )}
     </div>
   );
