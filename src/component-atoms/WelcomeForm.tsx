@@ -1,6 +1,5 @@
-import React, { useRef } from "react";
-import { playerInfo } from "../SharedTypes";
-
+import Reac, { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 type WelcomeFormProps = {
   setPlayerName: React.Dispatch<React.SetStateAction<string>>;
   setDifficulty: React.Dispatch<React.SetStateAction<string>>;
@@ -19,6 +18,21 @@ const WelcomeForm = ({
     setDifficulty(level);
   };
 
+  const fetchingSessionToken = () => {
+    return fetch("https://opentdb.com/api_token.php?command=request")
+      .then((response) => {
+        return response.json();
+      })
+      .then((response) => {
+        return response.token;
+      });
+  };
+
+  const { data } = useQuery({
+    queryKey: ["token"],
+    queryFn: fetchingSessionToken,
+  });
+  console.log(data, "checkingggg dataaaaaaaa! of tokennn!");
   const handleStartOfTheGame = () => {
     setStart(true);
     localStorage.setItem(
@@ -26,9 +40,14 @@ const WelcomeForm = ({
       JSON.stringify({
         playerName: playerName,
         difficulty: difficulty,
+        totalScore: 0,
+        selectedCategories: [],
+        token: data ? data : "",
+        submissionDate: new Date().toISOString(),
       })
     );
   };
+
   return (
     <div>
       <div className="flex flex-col gap-3 items-center p-4">

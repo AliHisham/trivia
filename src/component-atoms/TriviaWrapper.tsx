@@ -16,6 +16,16 @@ const TriviaWrapper = () => {
       setStart(true);
       setPlayerName(playerData.playerName);
       setDifficulty(playerData.difficulty);
+      let date1 = new Date(playerData.submissionDate);
+      let date2 = new Date();
+      let differenceInMilliseconds = Math.abs(
+        date1.getTime() - date2.getTime()
+      );
+      let differenceInHour = differenceInMilliseconds / (60 * 60 * 1000);
+      if (differenceInHour >= 6) {
+        setStart(false);
+        localStorage.removeItem("triviaInfo");
+      }
     }
   }, []);
 

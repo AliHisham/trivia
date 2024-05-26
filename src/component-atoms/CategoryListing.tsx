@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Category } from "../SharedTypes";
 import CategoryCard from "./CategoryCard";
@@ -8,6 +8,8 @@ type CategoryProps = {
 };
 
 const CategoryListing = ({ setCategory }: CategoryProps) => {
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
   const fetchingCategories = () => {
     return fetch("https://opentdb.com/api_category.php")
       .then((res) => {
@@ -23,6 +25,24 @@ const CategoryListing = ({ setCategory }: CategoryProps) => {
     queryFn: fetchingCategories,
   });
 
+  const checkCategoryAvailability = (categoryNumber: number) => {
+    const data = localStorage.getItem("triviaInfo");
+
+    if (data) {
+      const playerData = JSON.parse(data);
+
+      if (playerData.selectedCategories) {
+        console.log(categoryNumber, "checkinggagagag");
+        let index = playerData.selectedCategories.findIndex(
+          (number: number) => number == categoryNumber
+        );
+        console.log(index, "checking the indexxxxx");
+        return index >= 0 ? false : true;
+      }
+    }
+    return true;
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <h2>SELECT A CATEGORY!</h2>
@@ -32,7 +52,9 @@ const CategoryListing = ({ setCategory }: CategoryProps) => {
             return (
               <div
                 onClick={() => {
-                  setCategory(category.id);
+                  checkCategoryAvailability(category.id)
+                    ? setCategory(category.id)
+                    : setCategory(0);
                 }}
                 className=""
               >

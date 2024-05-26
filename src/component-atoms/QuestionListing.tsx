@@ -85,6 +85,24 @@ const QuestionListing = ({
         );
       }
     } else {
+      const data = localStorage.getItem("triviaInfo");
+      if (data) {
+        const playerData = JSON.parse(data);
+
+        let temp = [...playerData.selectedCategories, category];
+        let totalPlayerScore = playerData.totalScore + numberOfCorrectAnsweres;
+        localStorage.setItem(
+          "triviaInfo",
+          JSON.stringify({
+            playerName: playerData.playerName,
+            difficulty: playerData.difficulty,
+            selectedCategories: temp,
+            totalScore: totalPlayerScore,
+            token: playerData.token,
+            submissionDate: playerData.submissionDate,
+          })
+        );
+      }
       setCategory(0);
     }
   }, [index]);
