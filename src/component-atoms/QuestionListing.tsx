@@ -8,12 +8,7 @@ type QuestionListingProps = {
   category: number;
   difficulty: string;
   setCategory: React.Dispatch<React.SetStateAction<number>>;
-  setNumberOfCorrectAnsweres: React.Dispatch<
-    React.SetStateAction<{
-      correctAnsweres: number;
-      categories: number;
-    }>
-  >;
+  setNumberOfCorrectAnsweres: React.Dispatch<React.SetStateAction<number>>;
   numberOfCorrectAnsweres: number;
 };
 const QuestionListing = ({
@@ -128,6 +123,7 @@ const QuestionListing = ({
           correct_answer={data[index - 1].correct_answer}
           setAnswer={setAnswer}
           answer={answer}
+          key={index}
         />
       )}
       <div className="flex gap-3">
@@ -135,13 +131,9 @@ const QuestionListing = ({
           disabled={answer === ""}
           onClick={() => {
             if (data && data && data[index - 1] && answer) {
-              console.log(answer, data[index - 1]);
               if (answer === data[index - 1].correct_answer) {
                 setNumberOfCorrectAnsweres((prev) => {
-                  return {
-                    correctAnsweres: prev.correctAnsweres + 1,
-                    categories: 0,
-                  };
+                  return prev + 1;
                 });
               }
             }

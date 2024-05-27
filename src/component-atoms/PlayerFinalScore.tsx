@@ -2,22 +2,24 @@ import React from "react";
 
 type PlayerFinalScoreProps = {
   playerName: string;
-  numberOfCorrectAnsweresCount: number;
-  numberOfCorrectAnsweresPercentage: number;
+  categories: number;
   setStart: React.Dispatch<React.SetStateAction<boolean>>;
+  setCategotry: React.Dispatch<React.SetStateAction<number>>;
+  setShowScore: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const PlayerFinalScore = ({
-  numberOfCorrectAnsweresCount,
-  numberOfCorrectAnsweresPercentage,
+  categories,
   playerName,
   setStart,
+  setCategotry,
+  setShowScore,
 }: PlayerFinalScoreProps) => {
   const caluclatePercentage = () => {
     const data = localStorage.getItem("triviaInfo");
     if (data) {
       const playerInfo = JSON.parse(data);
       const totalScore = playerInfo.totalScore;
-      return (totalScore / (numberOfCorrectAnsweresPercentage * 5)) * 100;
+      return (totalScore / (categories * 5)) * 100;
     } else {
       return 0;
     }
@@ -39,7 +41,6 @@ const PlayerFinalScore = ({
       <p className="text-4xl text-primary-dark">
         {" "}
         <span className="text-black">score:</span>
-        {numberOfCorrectAnsweresCount}
       </p>
 
       <p className="text-4xl text-primary-dark">
@@ -54,6 +55,8 @@ const PlayerFinalScore = ({
       <button
         onClick={() => {
           setStart(false);
+          setCategotry(0);
+          setShowScore(false);
           localStorage.removeItem("triviaInfo");
         }}
         className="text-4xl bg-primary-dark p-4 rounded-md"

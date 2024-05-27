@@ -58,6 +58,7 @@ const WelcomeForm = ({
           {Array.from({ length: 3 }).map((button, index) => {
             return (
               <button
+                key={index}
                 onClick={() => handleSetDifficultyLevel(index)}
                 className="bg-primary rounded-md py-4 px-8 font-bangers text-lg text-black hover:text-white hover:bg-primary"
               >

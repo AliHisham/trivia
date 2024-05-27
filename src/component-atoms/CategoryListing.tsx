@@ -7,12 +7,8 @@ import { fetchingCategories } from "../service/triviaApis/trivia";
 type CategoryProps = {
   setCategory: React.Dispatch<React.SetStateAction<number>>;
   setShowScore: React.Dispatch<React.SetStateAction<boolean>>;
-  setNumberOfCorrectAnsweres: React.Dispatch<
-    React.SetStateAction<{
-      correctAnsweres: number;
-      categories: number;
-    }>
-  >;
+  setNumberOfCategories: React.Dispatch<number>;
+  setNumberOfCorrectAnsweres: React.Dispatch<number>;
 };
 
 export const checkCategoryAvailability = (categoryNumber: number) => {
@@ -22,11 +18,10 @@ export const checkCategoryAvailability = (categoryNumber: number) => {
     const playerData = JSON.parse(data);
 
     if (playerData.selectedCategories) {
-      console.log(categoryNumber, "checkinggagagag");
       let index = playerData.selectedCategories.findIndex(
         (number: number) => number == categoryNumber
       );
-      console.log(index, "checking the indexxxxx");
+
       return index >= 0 ? false : true;
     }
   }
@@ -35,6 +30,7 @@ export const checkCategoryAvailability = (categoryNumber: number) => {
 const CategoryListing = ({
   setCategory,
   setShowScore,
+  setNumberOfCategories,
   setNumberOfCorrectAnsweres,
 }: CategoryProps) => {
   const { data } = useQuery<Category[]>({
@@ -43,25 +39,15 @@ const CategoryListing = ({
   });
 
   useEffect(() => {
+    setNumberOfCorrectAnsweres(0);
     const playerdata = localStorage.getItem("triviaInfo");
     if (playerdata) {
       const playerData_json = JSON.parse(playerdata);
       if (playerData_json.selectedCategories) {
-        console.log(
-          data?.length,
-          playerData_json.selectedCategories.length,
-          "cehcehjchehjc"
-        );
         if (data && data.length == playerData_json.selectedCategories.length) {
-          console.log("inside awwwiwiwi");
           setCategory(0);
           setShowScore(true);
-          setNumberOfCorrectAnsweres((prev) => {
-            return {
-              correctAnsweres: prev.correctAnsweres,
-              categories: data.length,
-            };
-          });
+          setNumberOfCategories(data.length);
         }
       }
     }
@@ -75,6 +61,7 @@ const CategoryListing = ({
           data.map((category) => {
             return (
               <div
+                key={category.id}
                 onClick={() => {
                   checkCategoryAvailability(category.id)
                     ? setCategory(category.id)
@@ -85,7 +72,6 @@ const CategoryListing = ({
                 <CategoryCard
                   categoryName={category.name}
                   categorNumber={category.id}
-                  key={category.id}
                 />
               </div>
             );

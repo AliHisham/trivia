@@ -10,10 +10,9 @@ const TriviaWrapper = () => {
   const [start, setStart] = useState<boolean>(false);
   const [category, setCategory] = useState<number>(0);
   const [showScore, setShowScore] = useState<boolean>(false);
-  const [numberOfCorrectAnsweres, setNumberOfCorrectAnsweres] = useState<{
-    correctAnsweres: number;
-    categories: number;
-  }>({ correctAnsweres: 0, categories: 0 });
+  const [numberOfCorrectAnsweres, setNumberOfCorrectAnsweres] =
+    useState<number>(0);
+  const [categories, setNumberOfCategories] = useState(0);
 
   useEffect(() => {
     const data = localStorage.getItem("triviaInfo");
@@ -52,12 +51,13 @@ const TriviaWrapper = () => {
         <CategoryListing
           setShowScore={setShowScore}
           setCategory={setCategory}
+          setNumberOfCategories={setNumberOfCategories}
           setNumberOfCorrectAnsweres={setNumberOfCorrectAnsweres}
         />
       )}
       {category && !showScore ? (
         <QuestionListing
-          numberOfCorrectAnsweres={numberOfCorrectAnsweres.correctAnsweres}
+          numberOfCorrectAnsweres={numberOfCorrectAnsweres}
           setNumberOfCorrectAnsweres={setNumberOfCorrectAnsweres}
           setCategory={setCategory}
           category={category}
@@ -68,10 +68,11 @@ const TriviaWrapper = () => {
       )}
       {showScore && (
         <PlayerFinalScore
-          numberOfCorrectAnsweresCount={numberOfCorrectAnsweres.correctAnsweres}
-          numberOfCorrectAnsweresPercentage={numberOfCorrectAnsweres.categories}
+          categories={categories}
           playerName={playerName}
           setStart={setStart}
+          setCategotry={setCategory}
+          setShowScore={setShowScore}
         />
       )}
     </div>
