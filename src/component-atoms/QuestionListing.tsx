@@ -8,18 +8,26 @@ type QuestionListingProps = {
   category: number;
   difficulty: string;
   setCategory: React.Dispatch<React.SetStateAction<number>>;
+  setNumberOfCorrectAnsweres: React.Dispatch<
+    React.SetStateAction<{
+      correctAnsweres: number;
+      categories: number;
+    }>
+  >;
+  numberOfCorrectAnsweres: number;
 };
 const QuestionListing = ({
   category,
   difficulty,
   setCategory,
+  numberOfCorrectAnsweres,
+  setNumberOfCorrectAnsweres,
 }: QuestionListingProps) => {
   const amount = 5;
   const [index, setIndex] = useState<number>(1);
   const [stopWatch, setStopWatch] = useState<number>(0);
   const [answer, setAnswer] = useState<string>("");
-  const [numberOfCorrectAnsweres, setNumberOfCorrectAnsweres] =
-    useState<number>(0);
+
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [timeoutId, setTimeOutId] = useState<NodeJS.Timeout | null>(null);
 
@@ -130,7 +138,10 @@ const QuestionListing = ({
               console.log(answer, data[index - 1]);
               if (answer === data[index - 1].correct_answer) {
                 setNumberOfCorrectAnsweres((prev) => {
-                  return prev + 1;
+                  return {
+                    correctAnsweres: prev.correctAnsweres + 1,
+                    categories: 0,
+                  };
                 });
               }
             }

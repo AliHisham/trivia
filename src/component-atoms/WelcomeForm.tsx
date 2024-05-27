@@ -23,16 +23,6 @@ const WelcomeForm = ({
       : setDifficulty("hard");
   };
 
-  // const fetchingSessionToken = () => {
-  //   return fetch("https://opentdb.com/api_token.php?command=request")
-  //     .then((response) => {
-  //       return response.json();
-  //     })
-  //     .then((response) => {
-  //       return response.token;
-  //     });
-  // };
-
   const { data } = useQuery({
     queryKey: ["token"],
     queryFn: fetchingSessionToken,

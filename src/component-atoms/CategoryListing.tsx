@@ -6,6 +6,13 @@ import { fetchingCategories } from "../service/triviaApis/trivia";
 
 type CategoryProps = {
   setCategory: React.Dispatch<React.SetStateAction<number>>;
+  setShowScore: React.Dispatch<React.SetStateAction<boolean>>;
+  setNumberOfCorrectAnsweres: React.Dispatch<
+    React.SetStateAction<{
+      correctAnsweres: number;
+      categories: number;
+    }>
+  >;
 };
 
 export const checkCategoryAvailability = (categoryNumber: number) => {
@@ -25,20 +32,40 @@ export const checkCategoryAvailability = (categoryNumber: number) => {
   }
   return true;
 };
-const CategoryListing = ({ setCategory }: CategoryProps) => {
+const CategoryListing = ({
+  setCategory,
+  setShowScore,
+  setNumberOfCorrectAnsweres,
+}: CategoryProps) => {
   const { data } = useQuery<Category[]>({
     queryKey: ["trivia_categories"],
     queryFn: fetchingCategories,
   });
 
   useEffect(() => {
-    const data = localStorage.getItem("triviaInfo");
-    if (data) {
-      const playerData = JSON.parse(data);
-      if (playerData.selectedCategories) {
+    const playerdata = localStorage.getItem("triviaInfo");
+    if (playerdata) {
+      const playerData_json = JSON.parse(playerdata);
+      if (playerData_json.selectedCategories) {
+        console.log(
+          data?.length,
+          playerData_json.selectedCategories.length,
+          "cehcehjchehjc"
+        );
+        if (data && data.length == playerData_json.selectedCategories.length) {
+          console.log("inside awwwiwiwi");
+          setCategory(0);
+          setShowScore(true);
+          setNumberOfCorrectAnsweres((prev) => {
+            return {
+              correctAnsweres: prev.correctAnsweres,
+              categories: data.length,
+            };
+          });
+        }
       }
     }
-  }, []);
+  }, [data]);
 
   return (
     <div className="flex flex-col gap-4 items-center">

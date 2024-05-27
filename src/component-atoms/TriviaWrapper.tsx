@@ -2,12 +2,18 @@ import React, { useState, useEffect } from "react";
 import WelcomeForm from "./WelcomeForm";
 import CategoryListing from "./CategoryListing";
 import QuestionListing from "./QuestionListing";
+import PlayerFinalScore from "./PlayerFinalScore";
 
 const TriviaWrapper = () => {
   const [playerName, setPlayerName] = useState<string>("");
   const [difficulty, setDifficulty] = useState<string>("");
   const [start, setStart] = useState<boolean>(false);
   const [category, setCategory] = useState<number>(0);
+  const [showScore, setShowScore] = useState<boolean>(false);
+  const [numberOfCorrectAnsweres, setNumberOfCorrectAnsweres] = useState<{
+    correctAnsweres: number;
+    categories: number;
+  }>({ correctAnsweres: 0, categories: 0 });
 
   useEffect(() => {
     const data = localStorage.getItem("triviaInfo");
@@ -29,11 +35,11 @@ const TriviaWrapper = () => {
         setDifficulty(playerData.difficulty);
       }
     }
-  }, []);
+  }, [start]);
 
   return (
     <div className="p-4 bg-background rounded-md box shadow-md">
-      {!start && !category && (
+      {!start && !category && !showScore && (
         <WelcomeForm
           setPlayerName={setPlayerName}
           setDifficulty={setDifficulty}
@@ -42,15 +48,31 @@ const TriviaWrapper = () => {
           difficulty={difficulty}
         />
       )}
-      {start && !category && <CategoryListing setCategory={setCategory} />}
-      {category ? (
+      {start && !category && !showScore && (
+        <CategoryListing
+          setShowScore={setShowScore}
+          setCategory={setCategory}
+          setNumberOfCorrectAnsweres={setNumberOfCorrectAnsweres}
+        />
+      )}
+      {category && !showScore ? (
         <QuestionListing
+          numberOfCorrectAnsweres={numberOfCorrectAnsweres.correctAnsweres}
+          setNumberOfCorrectAnsweres={setNumberOfCorrectAnsweres}
           setCategory={setCategory}
           category={category}
           difficulty={difficulty}
         />
       ) : (
         <></>
+      )}
+      {showScore && (
+        <PlayerFinalScore
+          numberOfCorrectAnsweresCount={numberOfCorrectAnsweres.correctAnsweres}
+          numberOfCorrectAnsweresPercentage={numberOfCorrectAnsweres.categories}
+          playerName={playerName}
+          setStart={setStart}
+        />
       )}
     </div>
   );
