@@ -30,7 +30,7 @@ const TriviaWrapper = () => {
   }, []);
 
   return (
-    <div className="p-4 bg-gray-300 rounded-md box shadow-md">
+    <div className="p-4 bg-background rounded-md box shadow-md">
       {!start && !category && (
         <WelcomeForm
           setPlayerName={setPlayerName}

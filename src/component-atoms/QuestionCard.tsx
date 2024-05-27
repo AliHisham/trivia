@@ -12,6 +12,8 @@ const QuestionCard = ({
   setAnswer,
 }: QuestionProps) => {
   const [activeIndex, setActiveIndex] = useState<number>();
+  const commonBtnClasses =
+    "rounded-md text-lg hover:bg-secondary hover:text-white";
 
   let answers = [...incorrect_answres, correct_answer];
 
@@ -29,19 +31,17 @@ const QuestionCard = ({
   }, [correct_answer]);
 
   return (
-    <div className="bg-white p-4 rounded-md flex flex-col gap-2 items-center">
-      <div>{question}</div>
+    <div className="bg-primary h-56 text-white min-w-44 p-4 rounded-md flex flex-col gap-2 items-center font-bangers">
+      <div className="text-2xl">{question}</div>
       <div className=" flex gap-2 items-center">
         {shuffeledAnsweres.map((answer, index) => {
           return (
             <div>
               <button
                 onClick={() => handleSelectedAnswer(index, answer)}
-                className={
-                  activeIndex == index + 1
-                    ? "bg-red-500 p-2 rounded-md"
-                    : "bg-red-200 p-2 rounded-md"
-                }
+                className={`${
+                  index + 1
+                }== ${activeIndex} ? bg-secondary p-4 :bg-white p-2 text-black ${commonBtnClasses}`}
               >
                 {answer}
               </button>

@@ -37,10 +37,11 @@ const QuestionListing = ({
     queryKey: ["results"],
     queryFn: fetchingQuestions,
   });
-
+  const difficultyTimeValue =
+    difficulty === "easy" ? 90 : difficulty === "medium" ? 60 : 30;
   const skippingQuestions = (skipType: number) => {
     if (skipType == 1) {
-      setStopWatch(30);
+      setStopWatch(difficultyTimeValue);
     }
     setIndex((prev) => {
       return prev + 1;
@@ -50,7 +51,7 @@ const QuestionListing = ({
   useEffect(() => {
     if (index <= amount) {
       let milliseconds =
-        difficulty === "HARD" ? 30000 : difficulty === "MEDIUM" ? 60000 : 90000;
+        difficulty === "hard" ? 30000 : difficulty === "medium" ? 60000 : 90000;
 
       if (timeoutId) {
         clearTimeout(timeoutId);
@@ -63,7 +64,7 @@ const QuestionListing = ({
         setIntervalId(
           setInterval(() => {
             setStopWatch((prev) => {
-              if (prev >= 30) {
+              if (prev >= difficultyTimeValue) {
                 return 1;
               } else {
                 return prev + 1;
@@ -108,11 +109,14 @@ const QuestionListing = ({
   }, [index]);
 
   return (
-    <div className="flex flex-col gap-3 items-center">
+    <div className="flex flex-col h-screen  gap-3 items-center">
       <div className="text-red-500">
-        {stopWatch == 30
+        {stopWatch == difficultyTimeValue
           ? "new question"
-          : stopWatch + " seconds remaining of " + 30 + " seconds"}
+          : stopWatch +
+            " seconds remaining of " +
+            difficultyTimeValue +
+            " seconds"}
       </div>
 
       {data && index <= amount && (
@@ -134,16 +138,16 @@ const QuestionListing = ({
                 });
               }
             }
-            setStopWatch(30);
+            setStopWatch(difficultyTimeValue);
             setIndex((prev) => prev + 1);
           }}
-          className="p-4 bg-red-600 rounded-md"
+          className="p-4 bg-primary-dark text-white font-bangers text-2xl rounded-md"
         >
           Next
         </button>
         <button
           onClick={() => skippingQuestions(1)}
-          className="p-4 bg-red-600 rounded-md"
+          className="p-4 bg-primary-dark text-white font-bangers text-2xl rounded-md"
         >
           Skip
         </button>

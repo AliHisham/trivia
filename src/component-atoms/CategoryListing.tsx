@@ -44,8 +44,8 @@ const CategoryListing = ({ setCategory }: CategoryProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <h2>SELECT A CATEGORY!</h2>
+    <div className="flex flex-col gap-4 items-center">
+      <h2 className="font-bangers text-6xl text-primary">SELECT A CATEGORY!</h2>
       <div className=" grid grid-cols-4 gap-4">
         {data &&
           data.map((category) => {
