@@ -1,6 +1,6 @@
-import Reac, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { IndentStyle } from "typescript";
+import { fetchingSessionToken } from "../service/triviaApis/trivia";
+
 type WelcomeFormProps = {
   setPlayerName: React.Dispatch<React.SetStateAction<string>>;
   setDifficulty: React.Dispatch<React.SetStateAction<string>>;
@@ -23,21 +23,21 @@ const WelcomeForm = ({
       : setDifficulty("hard");
   };
 
-  const fetchingSessionToken = () => {
-    return fetch("https://opentdb.com/api_token.php?command=request")
-      .then((response) => {
-        return response.json();
-      })
-      .then((response) => {
-        return response.token;
-      });
-  };
+  // const fetchingSessionToken = () => {
+  //   return fetch("https://opentdb.com/api_token.php?command=request")
+  //     .then((response) => {
+  //       return response.json();
+  //     })
+  //     .then((response) => {
+  //       return response.token;
+  //     });
+  // };
 
   const { data } = useQuery({
     queryKey: ["token"],
     queryFn: fetchingSessionToken,
   });
-  console.log(data, "checkingggg dataaaaaaaa! of tokennn!");
+
   const handleStartOfTheGame = () => {
     setStart(true);
     localStorage.setItem(

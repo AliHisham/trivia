@@ -4,12 +4,14 @@ type QuestionProps = {
   incorrect_answres: string[];
   correct_answer: string;
   setAnswer: React.Dispatch<React.SetStateAction<string>>;
+  answer: string;
 };
 const QuestionCard = ({
   correct_answer,
   incorrect_answres,
   question,
   setAnswer,
+  answer,
 }: QuestionProps) => {
   const [activeIndex, setActiveIndex] = useState<number>();
   const commonBtnClasses =
@@ -31,17 +33,15 @@ const QuestionCard = ({
   }, [correct_answer]);
 
   return (
-    <div className="bg-primary h-56 text-white min-w-44 p-4 rounded-md flex flex-col gap-2 items-center font-bangers">
-      <div className="text-2xl">{question}</div>
-      <div className=" flex gap-2 items-center">
+    <div className="bg-primary h-56 text-white min-w-custom p-4 rounded-md flex flex-col gap-4 items-center font-bangers justify-center text-center">
+      <div className="text-4xl">{question}</div>
+      <div className=" flex gap-4 items-center">
         {shuffeledAnsweres.map((answer, index) => {
           return (
             <div>
               <button
                 onClick={() => handleSelectedAnswer(index, answer)}
-                className={`${
-                  index + 1
-                }== ${activeIndex} ? bg-secondary p-4 :bg-white p-2 text-black ${commonBtnClasses}`}
+                className="text-black font-bangers text-2xl rounded-md p-2 bg-secondary hover:text-white hover:scale-110 transition-transform duration-300"
               >
                 {answer}
               </button>
@@ -49,6 +49,13 @@ const QuestionCard = ({
           );
         })}
       </div>
+      {answer && (
+        <div className=" font-bangers text-lg text-secondary">
+          {" "}
+          {"You Selected: "}
+          {answer}
+        </div>
+      )}
     </div>
   );
 };

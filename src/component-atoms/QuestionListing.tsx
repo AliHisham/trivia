@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Question } from "../SharedTypes";
 import QuestionCard from "./QuestionCard";
+import { fetchingQuestions } from "../service/triviaApis/trivia";
 
 type QuestionListingProps = {
   category: number;
@@ -22,20 +23,12 @@ const QuestionListing = ({
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [timeoutId, setTimeOutId] = useState<NodeJS.Timeout | null>(null);
 
-  const fetchingQuestions = () => {
-    return fetch(
-      `https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty.toLocaleLowerCase()}`
-    )
-      .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        return res.results;
-      });
-  };
+  const commonCssClass =
+    "text-white font-bangers text-2xl rounded-md p-4 py-2 px-4 ";
+
   const { data } = useQuery<Question[]>({
     queryKey: ["results"],
-    queryFn: fetchingQuestions,
+    queryFn: () => fetchingQuestions(amount, category, difficulty),
   });
   const difficultyTimeValue =
     difficulty === "easy" ? 90 : difficulty === "medium" ? 60 : 30;
@@ -46,6 +39,7 @@ const QuestionListing = ({
     setIndex((prev) => {
       return prev + 1;
     });
+    setAnswer("");
   };
 
   useEffect(() => {
@@ -110,7 +104,7 @@ const QuestionListing = ({
 
   return (
     <div className="flex flex-col h-screen  gap-3 items-center">
-      <div className="text-red-500">
+      <div className="text-primary-dark text-2xl font-bangers">
         {stopWatch == difficultyTimeValue
           ? "new question"
           : stopWatch +
@@ -125,10 +119,12 @@ const QuestionListing = ({
           question={data[index - 1].question}
           correct_answer={data[index - 1].correct_answer}
           setAnswer={setAnswer}
+          answer={answer}
         />
       )}
       <div className="flex gap-3">
         <button
+          disabled={answer === ""}
           onClick={() => {
             if (data && data && data[index - 1] && answer) {
               console.log(answer, data[index - 1]);
@@ -140,14 +136,19 @@ const QuestionListing = ({
             }
             setStopWatch(difficultyTimeValue);
             setIndex((prev) => prev + 1);
+            setAnswer("");
           }}
-          className="p-4 bg-primary-dark text-white font-bangers text-2xl rounded-md"
+          className={`${
+            answer === ""
+              ? "bg-gray-400"
+              : "bg-primary-dark hover:scale-110 transition-transform duration-300"
+          } ${commonCssClass}`}
         >
           Next
         </button>
         <button
           onClick={() => skippingQuestions(1)}
-          className="p-4 bg-primary-dark text-white font-bangers text-2xl rounded-md"
+          className="py-2 px-4  bg-primary-dark text-white font-bangers text-2xl rounded-md hover:scale-110 transition-transform duration-"
         >
           Skip
         </button>

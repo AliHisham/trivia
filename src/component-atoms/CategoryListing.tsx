@@ -1,47 +1,44 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Category } from "../SharedTypes";
 import CategoryCard from "./CategoryCard";
+import { fetchingCategories } from "../service/triviaApis/trivia";
 
 type CategoryProps = {
   setCategory: React.Dispatch<React.SetStateAction<number>>;
 };
 
+export const checkCategoryAvailability = (categoryNumber: number) => {
+  const data = localStorage.getItem("triviaInfo");
+
+  if (data) {
+    const playerData = JSON.parse(data);
+
+    if (playerData.selectedCategories) {
+      console.log(categoryNumber, "checkinggagagag");
+      let index = playerData.selectedCategories.findIndex(
+        (number: number) => number == categoryNumber
+      );
+      console.log(index, "checking the indexxxxx");
+      return index >= 0 ? false : true;
+    }
+  }
+  return true;
+};
 const CategoryListing = ({ setCategory }: CategoryProps) => {
-  const [selectedCategories, setSelectedCategories] = useState([]);
-
-  const fetchingCategories = () => {
-    return fetch("https://opentdb.com/api_category.php")
-      .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        return res.trivia_categories;
-      });
-  };
-
   const { data } = useQuery<Category[]>({
     queryKey: ["trivia_categories"],
     queryFn: fetchingCategories,
   });
 
-  const checkCategoryAvailability = (categoryNumber: number) => {
+  useEffect(() => {
     const data = localStorage.getItem("triviaInfo");
-
     if (data) {
       const playerData = JSON.parse(data);
-
       if (playerData.selectedCategories) {
-        console.log(categoryNumber, "checkinggagagag");
-        let index = playerData.selectedCategories.findIndex(
-          (number: number) => number == categoryNumber
-        );
-        console.log(index, "checking the indexxxxx");
-        return index >= 0 ? false : true;
       }
     }
-    return true;
-  };
+  }, []);
 
   return (
     <div className="flex flex-col gap-4 items-center">

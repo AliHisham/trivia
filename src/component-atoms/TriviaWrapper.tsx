@@ -13,9 +13,7 @@ const TriviaWrapper = () => {
     const data = localStorage.getItem("triviaInfo");
     if (data) {
       let playerData = JSON.parse(data);
-      setStart(true);
-      setPlayerName(playerData.playerName);
-      setDifficulty(playerData.difficulty);
+
       let date1 = new Date(playerData.submissionDate);
       let date2 = new Date();
       let differenceInMilliseconds = Math.abs(
@@ -25,6 +23,10 @@ const TriviaWrapper = () => {
       if (differenceInHour >= 6) {
         setStart(false);
         localStorage.removeItem("triviaInfo");
+      } else {
+        setStart(true);
+        setPlayerName(playerData.playerName);
+        setDifficulty(playerData.difficulty);
       }
     }
   }, []);
@@ -41,12 +43,14 @@ const TriviaWrapper = () => {
         />
       )}
       {start && !category && <CategoryListing setCategory={setCategory} />}
-      {category && (
+      {category ? (
         <QuestionListing
           setCategory={setCategory}
           category={category}
           difficulty={difficulty}
         />
+      ) : (
+        <></>
       )}
     </div>
   );

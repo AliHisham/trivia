@@ -23,6 +23,9 @@ module.exports = {
         },
         border: "#FF1493", // Border Color (Accent)
       },
+      minWidth: {
+        custom: "50rem",
+      },
     },
   },
   plugins: [],
